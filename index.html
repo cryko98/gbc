@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gork Banner Creator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ffffff;
+            --secondary-color: #cccccc;
+            --dark-bg: #000000;
+            --darker-bg: #1a1a1a;
+            --container-bg: #252525;
+            --border-color: #444444;
+            --text-color: #ffffff;
+            --muted-text: #aaaaaa;
+            --highlight: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1500px;
+            padding: 30px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        h1 {
+            color: var(--highlight);
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: var(--muted-text);
+            font-size: 1.1rem;
+        }
+
+        .ca-text {
+            color: var(--muted-text);
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+
+        .sidebar {
+            background-color: var(--container-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .panel {
+            margin-bottom: 30px;
+        }
+
+        .panel-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--highlight);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-title i {
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--muted-text);
+            font-size: 0.9rem;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--darker-bg);
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        input[type="color"] {
+            width: 100%;
+            height: 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background: var(--darker-bg);
+            cursor: pointer;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: var(--darker-bg);
+            border-radius: 3px;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: var(--primary-color);
+            color: #000000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: #000000;
+        }
+
+        .btn-secondary:hover {
+            background-color: #b0b0b0;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .upload-area i {
+            font-size: 2rem;
+            color: var(--muted-text);
+            margin-bottom: 10px;
+        }
+
+        .upload-area p {
+            color: var(--muted-text);
+            font-size: 0.9rem;
+        }
+
+        #imageUpload {
+            display: none;
+        }
+
+        .preview-container {
+            position: relative;
+            background-color: var(--darker-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        #bannerCanvas {
+            display: block;
+            max-width: 100%;
+            cursor: move;
+        }
+
+        .canvas-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .tab-container {
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 15px;
+        }
+
+        .tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-size: 0.9rem;
+            color: var(--muted-text);
+        }
+
+        .tab.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .text-layer-item {
+            background-color: var(--darker-bg);
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .text-layer-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .text-layer-item.active {
+            border-left: 3px solid var(--primary-color);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .text-layer-controls {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+        }
+
+        .text-layer-controls button {
+            padding: 3px 6px;
+            font-size: 0.7rem;
+        }
+
+        .filter-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .filter-control label {
+            margin-bottom: 0;
+            min-width: 80px;
+        }
+
+        .filter-control input[type="range"] {
+            flex-grow: 1;
+        }
+
+        .filter-value {
+            min-width: 30px;
+            text-align: right;
+        }
+
+        .position-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .position-input {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .position-input input {
+            width: 60px;
+            text-align: center;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8rem;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        select option {
+            font-size: 1rem;
+            padding: 5px;
+        }
+
+        select option[value="Arial"] { font-family: Arial, sans-serif; }
+        select option[value="Verdana"] { font-family: Verdana, sans-serif; }
+        select option[value="Times New Roman"] { font-family: 'Times New Roman', Times, serif; }
+        select option[value="Georgia"] { font-family: Georgia, serif; }
+        select option[value="Impact"] { font-family: Impact, Charcoal, sans-serif; }
+        select option[value="Helvetica"] { font-family: Helvetica, Arial, sans-serif; }
+        select option[value="Comic Sans MS"] { font-family: 'Comic Sans MS', cursive, sans-serif; }
+        select option[value="Courier New"] { font-family: 'Courier New', Courier, monospace; }
+        select option[value="Tahoma"] { font-family: Tahoma, sans-serif; }
+        select option[value="Palatino Linotype"] { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+
+        @media (max-width: 992px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="https://pbs.twimg.com/profile_images/1917430483014897664/KkC-zpDA_400x400.jpg" alt="Gork Logo">
+            <h1>Gork Banner Creator</h1>
+        </header>
+        <p class="subtitle">Create stunning circular banners with multiple text layers and advanced image editing</p>
+        <p class="ca-text">ca: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+
+        <div class="app-container">
+            <div class="sidebar">
+                <div class="panel">
+                    <div class="panel-title"><i class="fas fa-image"></i> Image Source</div>
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & drop image here or click to browse</p>
+                        <input type="file" id="imageUpload" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label for="imageUrl">Or enter image URL:</label>
+                        <div class="btn-group">
+                            <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg">
+                            <button id="loadImageFromUrl" class="btn btn-secondary">Load</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title"><i class="fas fa-sliders-h"></i> Image Settings</div>
+                    <div class="tab-container">
+                        <div class="tabs">
+                            <div class="tab active" data-tab="position">Position</div>
+                            <div class="tab" data-tab="filters">Filters</div>
+                            <div class="tab" data-tab="advanced">Advanced</div>
+                        </div>
+                        <div class="tab-content active" id="position-tab">
+                            <div class="form-group">
+                                <label>Circle Size</label>
+                                <input type="range" id="circleSize" min="50" max="400" value="200">
+                            </div>
+                            <div class="form-group">
+                                <label>Position</label>
+                                <div class="position-controls">
+                                    <div class="position-input">
+                                        <label>X:</label>
+                                        <input type="number" id="imagePosX" value="50">
+                                        <button class="btn" id="centerImageX">Center</button>
+                                    </div>
+                                    <div class="position-input">
+                                        <label>Y:</label>
+                                        <input type="number" id="imagePosY" value="50">
+                                        <button class="btn" id="centerImageY">Center</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Rotation</label>
+                                <input type="range" id="imageRotation" min="0" max="360" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Image Zoom</label>
+                                <input type="range" id="imageZoom" min="0.5" max="2" step="0.1" value="1">
+                            </div>
+                        </div>
+                        <div class="tab-content" id="filters-tab">
+                            <div class="filter-control">
+                                <label>Brightness</label>
+                                <input type="range" id="brightnessFilter" min="0" max="200" value="100">
+                                <span class="filter-value" id="brightnessValue">100%</span>
+                            </div>
+                            <div class="filter-control">
+                                <label>Contrast</label>
+                                <input type="range" id="contrastFilter" min="0" max="200" value="100">
+                                <span class="filter-value" id="contrastValue">100%</span>
+                            </div>
+                            <div class="filter-control">
+                                <label>Saturation</label>
+                                <input type="range" id="saturationFilter" min="0" max="200" value="100">
+                                <span class="filter-value" id="saturationValue">100%</span>
+                            </div>
+                            <div class="filter-control">
+                                <label>Blur</label>
+                                <input type="range" id="blurFilter" min="0" max="20" value="0">
+                                <span class="filter-value" id="blurValue">0px</span>
+                            </div>
+                            <button class="btn btn-block" id="resetFilters">Reset Filters</button>
+                        </div>
+                        <div class="tab-content" id="advanced-tab">
+                            <div class="form-group">
+                                <label>Circle Border</label>
+                                <input type="color" id="circleBorderColor" value="#ffffff">
+                            </div>
+                            <div class="form-group">
+                                <label>Border Width</label>
+                                <input type="range" id="circleBorderWidth" min="0" max="20" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Circle Shadow</label>
+                                <input type="color" id="circleShadowColor" value="#000000">
+                            </div>
+                            <div class="form-group">
+                                <label>Shadow Blur</label>
+                                <input type="range" id="circleShadowBlur" min="0" max="50" value="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title"><i class="fas fa-font"></i> Text Layers</div>
+                    <div id="textLayersContainer"></div>
+                    <button class="btn btn-block" id="addTextLayer"><i class="fas fa-plus"></i> Add Text Layer</button>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title"><i class="fas fa-palette"></i> Background</div>
+                    <div class="form-group">
+                        <label for="backgroundColor">Color</label>
+                        <input type="color" id="backgroundColor" value="#000000">
+                    </div>
+                    <div class="form-group">
+                        <label for="bgPattern">Pattern</label>
+                        <select id="bgPattern">
+                            <option value="none">None</option>
+                            <option value="grid">Grid</option>
+                            <option value="dots">Dots</option>
+                            <option value="lines">Lines</option>
+                            <option value="noise">Noise</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bgPatternColor">Pattern Color</label>
+                        <input type="color" id="bgPatternColor" value="#ffffff">
+                    </div>
+                </div>
+
+                <button class="btn btn-block" id="downloadBanner"><i class="fas fa-download"></i> Download Banner</button>
+            </div>
+
+            <div class="preview-area">
+                <div class="preview-container">
+                    <canvas id="bannerCanvas" width="1500" height="500"></canvas>
+                </div>
+                <div class="canvas-controls">
+                    <div class="btn-group">
+                        <button class="btn" id="zoomIn"><i class="fas fa-search-plus"></i></button>
+                        <button class="btn" id="zoomOut"><i class="fas fa-search-minus"></i></button>
+                        <button class="btn" id="resetZoom">100%</button>
+                    </div>
+                    <div>
+                        <button class="btn" id="clearCanvas"><i class="fas fa-trash"></i> Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM Elements
+            const uploadArea = document.getElementById('uploadArea');
+            const imageUpload = document.getElementById('imageUpload');
+            const imageUrlInput = document.getElementById('imageUrl');
+            const loadImageFromUrlButton = document.getElementById('loadImageFromUrl');
+            const bannerCanvas = document.getElementById('bannerCanvas');
+            const ctx = bannerCanvas.getContext('2d');
+            const downloadBannerButton = document.getElementById('downloadBanner');
+            const backgroundColorInput = document.getElementById('backgroundColor');
+            const bgPatternSelect = document.getElementById('bgPattern');
+            const bgPatternColorInput = document.getElementById('bgPatternColor');
+            const addTextLayerButton = document.getElementById('addTextLayer');
+            const textLayersContainer = document.getElementById('textLayersContainer');
+            const clearCanvasButton = document.getElementById('clearCanvas');
+            const zoomInButton = document.getElementById('zoomIn');
+            const zoomOutButton = document.getElementById('zoomOut');
+            const resetZoomButton = document.getElementById('resetZoom');
+            const circleSizeInput = document.getElementById('circleSize');
+            const imagePosXInput = document.getElementById('imagePosX');
+            const imagePosYInput = document.getElementById('imagePosY');
+            const centerImageXButton = document.getElementById('centerImageX');
+            const centerImageYButton = document.getElementById('centerImageY');
+            const imageRotationInput = document.getElementById('imageRotation');
+            const imageZoomInput = document.getElementById('imageZoom');
+            const brightnessFilter = document.getElementById('brightnessFilter');
+            const contrastFilter = document.getElementById('contrastFilter');
+            const saturationFilter = document.getElementById('saturationFilter');
+            const blurFilter = document.getElementById('blurFilter');
+            const brightnessValue = document.getElementById('brightnessValue');
+            const contrastValue = document.getElementById('contrastValue');
+            const saturationValue = document.getElementById('saturationValue');
+            const blurValue = document.getElementById('blurValue');
+            const resetFiltersButton = document.getElementById('resetFilters');
+            const circleBorderColorInput = document.getElementById('circleBorderColor');
+            const circleBorderWidthInput = document.getElementById('circleBorderWidth');
+            const circleShadowColorInput = document.getElementById('circleShadowColor');
+            const circleShadowBlurInput = document.getElementById('circleShadowBlur');
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            // State variables
+            let uploadedImage = null;
+            let currentBackgroundColor = '#000000';
+            let currentZoom = 1;
+            let isDragging = false;
+            let dragStartX, dragStartY;
+            let currentImageX = 50, currentImageY = 50;
+            let currentCircleSize = 200;
+            let currentRotation = 0;
+            let imageZoom = 1;
+            let textLayers = [];
+            let activeTextLayerId = null;
+            let draggingTextLayer = null;
+            let filters = { brightness: 100, contrast: 100, saturation: 100, blur: 0 };
+            let circleStyle = { borderColor: '#ffffff', borderWidth: 0, shadowColor: '#000000', shadowBlur: 0 };
+            let bgPattern = { type: 'none', color: '#ffffff' };
+
+            // Initialize the app
+            function init() {
+                if (!window.FileReader) {
+                    alert('Your browser does not support FileReader. Please use a modern browser to upload images.');
+                    return;
+                }
+                setupEventListeners();
+                addNewTextLayer();
+                drawBanner();
+            }
+
+            // Set up event listeners
+            function setupEventListeners() {
+                uploadArea.addEventListener('click', () => {
+                    imageUpload.click();
+                });
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.style.borderColor = '#ffffff';
+                });
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.style.borderColor = '#444444';
+                });
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.style.borderColor = '#444444';
+                    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                        imageUpload.files = e.dataTransfer.files;
+                        handleImageUpload(e.dataTransfer.files[0]);
+                    } else {
+                        alert('No valid files dropped. Please drop an image file.');
+                    }
+                });
+                imageUpload.addEventListener('change', (e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                        handleImageUpload(e.target.files[0]);
+                    }
+                });
+                loadImageFromUrlButton.addEventListener('click', loadImageFromUrl);
+                downloadBannerButton.addEventListener('click', downloadBanner);
+                clearCanvasButton.addEventListener('click', clearCanvas);
+                zoomInButton.addEventListener('click', () => adjustZoom(0.1));
+                zoomOutButton.addEventListener('click', () => adjustZoom(-0.1));
+                resetZoomButton.addEventListener('click', resetZoom);
+                bannerCanvas.addEventListener('mousedown', startDrag);
+                bannerCanvas.addEventListener('mousemove', drag);
+                bannerCanvas.addEventListener('mouseup', endDrag);
+                bannerCanvas.addEventListener('mouseleave', endDrag);
+                circleSizeInput.addEventListener('input', updateCircleSize);
+                imagePosXInput.addEventListener('change', updateImagePosition);
+                imagePosYInput.addEventListener('change', updateImagePosition);
+                centerImageXButton.addEventListener('click', centerImageX);
+                centerImageYButton.addEventListener('click', centerImageY);
+                imageRotationInput.addEventListener('input', updateRotation);
+                imageZoomInput.addEventListener('input', updateImageZoom);
+                brightnessFilter.addEventListener('input', updateBrightness);
+                contrastFilter.addEventListener('input', updateContrast);
+                saturationFilter.addEventListener('input', updateSaturation);
+                blurFilter.addEventListener('input', updateBlur);
+                resetFiltersButton.addEventListener('click', resetAllFilters);
+                circleBorderColorInput.addEventListener('input', updateCircleStyle);
+                circleBorderWidthInput.addEventListener('input', updateCircleStyle);
+                circleShadowColorInput.addEventListener('input', updateCircleStyle);
+                circleShadowBlurInput.addEventListener('input', updateCircleStyle);
+                backgroundColorInput.addEventListener('input', updateBackground);
+                bgPatternSelect.addEventListener('change', updateBackgroundPattern);
+                bgPatternColorInput.addEventListener('input', updateBackgroundPattern);
+                addTextLayerButton.addEventListener('click', addNewTextLayer);
+                tabs.forEach(tab => tab.addEventListener('click', switchTab));
+            }
+
+            // Handle image upload
+            function handleImageUpload(file) {
+                if (!file) {
+                    alert('No file selected. Please choose an image.');
+                    return;
+                }
+
+                const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!validImageTypes.includes(file.type)) {
+                    alert('Invalid file type. Please upload a JPEG, PNG, GIF, or WebP image.');
+                    return;
+                }
+
+                const maxSize = 10 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    alert('File is too large. Please upload an image smaller than 10MB.');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        uploadedImage = img;
+                        currentImageX = (bannerCanvas.width - currentCircleSize) / 2;
+                        currentImageY = (bannerCanvas.height - currentCircleSize) / 2;
+                        imagePosXInput.value = Math.round(currentImageX);
+                        imagePosYInput.value = Math.round(currentImageY);
+                        drawBanner();
+                    };
+                    img.onerror = () => {
+                        alert('Failed to load the image. The file may be corrupted or not a valid image.');
+                    };
+                    img.src = e.target.result;
+                };
+                reader.onerror = () => {
+                    alert('Error reading the file. Please try again with a different image.');
+                };
+                reader.readAsDataURL(file);
+            }
+
+            // Load image from URL
+            function loadImageFromUrl() {
+                const url = imageUrlInput.value.trim();
+                if (!url) {
+                    alert('Please enter a valid image URL.');
+                    return;
+                }
+
+                try {
+                    new URL(url);
+                } catch (e) {
+                    alert('Invalid URL format. Please enter a valid URL (e.g., https://example.com/image.jpg).');
+                    return;
+                }
+
+                const img = new Image();
+                img.crossOrigin = 'Anonymous';
+                img.onload = () => {
+                    uploadedImage = img;
+                    currentImageX = (bannerCanvas.width - currentCircleSize) / 2;
+                    currentImageY = (bannerCanvas.height - currentCircleSize) / 2;
+                    imagePosXInput.value = Math.round(currentImageX);
+                    imagePosYInput.value = Math.round(currentImageY);
+                    drawBanner();
+                };
+                img.onerror = () => {
+                    alert('Failed to load image from URL. Ensure the URL is correct and the server allows CORS, or try uploading a local file.');
+                };
+                img.src = url;
+            }
+
+            // Draw the complete banner
+            function drawBanner() {
+                ctx.clearRect(0, 0, bannerCanvas.width, bannerCanvas.height);
+                drawBackground();
+                if (uploadedImage) {
+                    drawImageInCircle();
+                }
+                drawTextLayers();
+            }
+
+            // Draw background with color and pattern
+            function drawBackground() {
+                ctx.fillStyle = currentBackgroundColor;
+                ctx.fillRect(0, 0, bannerCanvas.width, bannerCanvas.height);
+
+                if (bgPattern.type !== 'none') {
+                    const patternCanvas = document.createElement('canvas');
+                    patternCanvas.width = 20;
+                    patternCanvas.height = 20;
+                    const patternCtx = patternCanvas.getContext('2d');
+
+                    patternCtx.fillStyle = currentBackgroundColor;
+                    patternCtx.fillRect(0, 0, 20, 20);
+                    patternCtx.strokeStyle = bgPattern.color;
+
+                    switch (bgPattern.type) {
+                        case 'grid':
+                            patternCtx.strokeRect(0, 0, 20, 20);
+                            patternCtx.beginPath();
+                            patternCtx.moveTo(10, 0);
+                            patternCtx.lineTo(10, 20);
+                            patternCtx.moveTo(0, 10);
+                            patternCtx.lineTo(20, 10);
+                            patternCtx.stroke();
+                            break;
+                        case 'dots':
+                            patternCtx.fillStyle = bgPattern.color;
+                            patternCtx.beginPath();
+                            patternCtx.arc(5, 5, 1, 0, Math.PI * 2);
+                            patternCtx.arc(15, 5, 1, 0, Math.PI * 2);
+                            patternCtx.arc(5, 15, 1, 0, Math.PI * 2);
+                            patternCtx.arc(15, 15, 1, 0, Math.PI * 2);
+                            patternCtx.fill();
+                            break;
+                        case 'lines':
+                            patternCtx.beginPath();
+                            patternCtx.moveTo(0, 0);
+                            patternCtx.lineTo(20, 20);
+                            patternCtx.stroke();
+                            break;
+                        case 'noise':
+                            for (let i = 0; i < 50; i++) {
+                                const x = Math.random() * 20;
+                                const y = Math.random() * 20;
+                                patternCtx.fillStyle = `rgba(${hexToRgb(bgPattern.color)}, ${Math.random() * 0.3})`;
+                                patternCtx.fillRect(x, y, 1, 1);
+                            }
+                            break;
+                    }
+
+                    const pattern = ctx.createPattern(patternCanvas, 'repeat');
+                    ctx.fillStyle = pattern;
+                    ctx.globalAlpha = 0.5;
+                    ctx.fillRect(0, 0, bannerCanvas.width, bannerCanvas.height);
+                    ctx.globalAlpha = 1;
+                }
+            }
+
+            // Draw image within a circular mask
+            function drawImageInCircle() {
+                ctx.save();
+
+                if (circleStyle.shadowBlur > 0) {
+                    ctx.shadowColor = circleStyle.shadowColor;
+                    ctx.shadowBlur = circleStyle.shadowBlur;
+                    ctx.shadowOffsetX = 0;
+                    ctx.shadowOffsetY = 0;
+                }
+
+                const centerX = currentImageX + currentCircleSize / 2;
+                const centerY = currentImageY + currentCircleSize / 2;
+                const radius = currentCircleSize / 2;
+
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.clip();
+
+                let filterString = '';
+                if (filters.brightness !== 100) filterString += `brightness(${filters.brightness}%) `;
+                if (filters.contrast !== 100) filterString += `contrast(${filters.contrast}%) `;
+                if (filters.saturation !== 100) filterString += `saturate(${filters.saturation}%) `;
+                if (filters.blur > 0) filterString += `blur(${filters.blur}px) `;
+                if (filterString) ctx.filter = filterString.trim();
+
+                ctx.translate(centerX, centerY);
+                ctx.rotate(currentRotation * Math.PI / 180);
+                ctx.scale(imageZoom, imageZoom);
+                ctx.translate(-centerX, -centerY);
+
+                ctx.drawImage(uploadedImage, currentImageX, currentImageY, currentCircleSize, currentCircleSize);
+
+                ctx.filter = 'none';
+
+                if (circleStyle.borderWidth > 0) {
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                    ctx.lineWidth = circleStyle.borderWidth;
+                    ctx.strokeStyle = circleStyle.borderColor;
+                    ctx.stroke();
+                }
+
+                ctx.restore();
+            }
+
+            // Draw all text layers
+            function drawTextLayers() {
+                textLayers.forEach(layer => {
+                    if (layer.visible) {
+                        drawTextLayer(layer);
+                    }
+                });
+            }
+
+            // Draw a single text layer
+            function drawTextLayer(layer) {
+                ctx.save();
+
+                if (layer.shadowBlur > 0) {
+                    ctx.shadowColor = layer.shadowColor;
+                    ctx.shadowBlur = layer.shadowBlur;
+                    ctx.shadowOffsetX = layer.shadowOffsetX;
+                    ctx.shadowOffsetY = layer.shadowOffsetY;
+                }
+
+                ctx.font = `${layer.fontWeight} ${layer.fontSize * layer.scale}px ${layer.fontFamily}`;
+                ctx.fillStyle = layer.color;
+                ctx.textAlign = layer.textAlign;
+                ctx.textBaseline = 'alphabetic';
+
+                if (layer.outlineWidth > 0) {
+                    ctx.strokeStyle = layer.outlineColor;
+                    ctx.lineWidth = layer.outlineWidth;
+                    ctx.strokeText(layer.text, layer.x, layer.y);
+                }
+
+                ctx.fillText(layer.text, layer.x, layer.y);
+
+                ctx.restore();
+            }
+
+            // Add a new text layer
+            function addNewTextLayer() {
+                const newLayer = {
+                    id: Date.now().toString(),
+                    text: 'New Text',
+                    x: 100,
+                    y: 100,
+                    fontFamily: 'Arial',
+                    fontSize: 30,
+                    fontWeight: 'normal',
+                    color: '#ffffff',
+                    textAlign: 'left',
+                    visible: true,
+                    shadowColor: '#000000',
+                    shadowBlur: 0,
+                    shadowOffsetX: 0,
+                    shadowOffsetY: 0,
+                    outlineWidth: 0,
+                    outlineColor: '#ffffff',
+                    scale: 1
+                };
+
+                textLayers.push(newLayer);
+                activeTextLayerId = newLayer.id;
+                renderTextLayersList();
+                drawBanner();
+            }
+
+            // Render the text layers list in the sidebar
+            function renderTextLayersList() {
+                textLayersContainer.innerHTML = '';
+
+                textLayers.forEach((layer, index) => {
+                    const layerElement = document.createElement('div');
+                    layerElement.className = `text-layer-item ${layer.id === activeTextLayerId ? 'active' : ''}`;
+                    layerElement.innerHTML = `
+                        <div><strong>${layer.text}</strong> (${Math.round(layer.fontSize * layer.scale)}px)</div>
+                        <div class="text-layer-controls">
+                            <button class="btn" data-action="edit" data-id="${layer.id}"><i class="fas fa-edit"></i></button>
+                            <button class="btn" data-action="delete" data-id="${layer.id}"><i class="fas fa-trash"></i></button>
+                            <button class="btn" data-action="up" data-id="${layer.id}" ${index === 0 ? 'disabled' : ''}><i class="fas fa-arrow-up"></i></button>
+                            <button class="btn" data-action="down" data-id="${layer.id}" ${index === textLayers.length - 1 ? 'disabled' : ''}><i class="fas fa-arrow-down"></i></button>
+                            <button class="btn" data-action="toggle" data-id="${layer.id}">
+                                <i class="fas ${layer.visible ? 'fa-eye' : 'fa-eye-slash'}"></i>
+                            </button>
+                        </div>
+                    `;
+
+                    layerElement.addEventListener('click', () => {
+                        activeTextLayerId = layer.id;
+                        renderTextLayersList();
+                    });
+
+                    textLayersContainer.appendChild(layerElement);
+                });
+
+                document.querySelectorAll('[data-action]').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const action = button.getAttribute('data-action');
+                        const id = button.getAttribute('data-id');
+                        handleTextLayerAction(action, id);
+                    });
+                });
+            }
+
+            // Handle text layer actions
+            function handleTextLayerAction(action, id) {
+                const layerIndex = textLayers.findIndex(layer => layer.id === id);
+                if (layerIndex === -1) return;
+
+                switch (action) {
+                    case 'edit':
+                        editTextLayer(id);
+                        break;
+                    case 'delete':
+                        if (confirm('Are you sure you want to delete this text layer?')) {
+                            textLayers.splice(layerIndex, 1);
+                            if (activeTextLayerId === id) {
+                                activeTextLayerId = textLayers.length > 0 ? textLayers[0].id : null;
+                            }
+                            renderTextLayersList();
+                            drawBanner();
+                        }
+                        break;
+                    case 'up':
+                        if (layerIndex > 0) {
+                            const temp = textLayers[layerIndex - 1];
+                            textLayers[layerIndex - 1] = textLayers[layerIndex];
+                            textLayers[layerIndex] = temp;
+                            renderTextLayersList();
+                            drawBanner();
+                        }
+                        break;
+                    case 'down':
+                        if (layerIndex < textLayers.length - 1) {
+                            const temp = textLayers[layerIndex + 1];
+                            textLayers[layerIndex + 1] = textLayers[layerIndex];
+                            textLayers[layerIndex] = temp;
+                            renderTextLayersList();
+                            drawBanner();
+                        }
+                        break;
+                    case 'toggle':
+                        textLayers[layerIndex].visible = !textLayers[layerIndex].visible;
+                        renderTextLayersList();
+                        drawBanner();
+                        break;
+                }
+            }
+
+            // Edit text layer properties with a modal
+            function editTextLayer(id) {
+                const layer = textLayers.find(layer => layer.id === id);
+                if (!layer) return;
+
+                const modal = document.createElement('div');
+                modal.style.position = 'fixed';
+                modal.style.top = '50%';
+                modal.style.left = '50%';
+                modal.style.transform = 'translate(-50%, -50%)';
+                modal.style.backgroundColor = '#252525';
+                modal.style.padding = '20px';
+                modal.style.borderRadius = '8px';
+                modal.style.zIndex = '1000';
+                modal.style.color = '#ffffff';
+                modal.style.width = '400px';
+                modal.style.maxHeight = '80vh';
+                modal.style.overflowY = 'auto';
+
+                modal.innerHTML = `
+                    <h3>Edit Text Layer</h3>
+                    <div class="form-group">
+                        <label>Text:</label>
+                        <textarea style="width:100%;padding:8px;" id="modalText">${layer.text}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Font Family:</label>
+                        <select id="modalFontFamily" style="width:100%;padding:8px;">
+                            <option value="Arial" style="font-family:Arial,sans-serif;" ${layer.fontFamily === 'Arial' ? 'selected' : ''}>Arial</option>
+                            <option value="Verdana" style="font-family:Verdana,sans-serif;" ${layer.fontFamily === 'Verdana' ? 'selected' : ''}>Verdana</option>
+                            <option value="Times New Roman" style="font-family:Times New Roman,Times,serif;" ${layer.fontFamily === 'Times New Roman' ? 'selected' : ''}>Times New Roman</option>
+                            <option value="Georgia" style="font-family:Georgia,serif;" ${layer.fontFamily === 'Georgia' ? 'selected' : ''}>Georgia</option>
+                            <option value="Impact" style="font-family:Impact,Charcoal,sans-serif;" ${layer.fontFamily === 'Impact' ? 'selected' : ''}>Impact</option>
+                            <option value="Helvetica" style="font-family:Helvetica,Arial,sans-serif;" ${layer.fontFamily === 'Helvetica' ? 'selected' : ''}>Helvetica</option>
+                            <option value="Comic Sans MS" style="font-family:Comic Sans MS,cursive,sans-serif;" ${layer.fontFamily === 'Comic Sans MS' ? 'selected' : ''}>Comic Sans MS</option>
+                            <option value="Courier New" style="font-family:Courier New,Courier,monospace;" ${layer.fontFamily === 'Courier New' ? 'selected' : ''}>Courier New</option>
+                            <option value="Tahoma" style="font-family:Tahoma,sans-serif;" ${layer.fontFamily === 'Tahoma' ? 'selected' : ''}>Tahoma</option>
+                            <option value="Palatino Linotype" style="font-family:Palatino Linotype,Book Antiqua,Palatino,serif;" ${layer.fontFamily === 'Palatino Linotype' ? 'selected' : ''}>Palatino Linotype</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Font Size:</label>
+                        <input type="number" id="modalFontSize" value="${layer.fontSize}" min="10" max="100" style="width:100%;padding:8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Text Scale:</label>
+                        <input type="number" id="modalScale" value="${layer.scale}" step="0.1" min="0.5" max="2" style="width:100%;padding:8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Font Weight:</label>
+                        <select id="modalFontWeight" style="width:100%;padding:8px;">
+                            <option value="normal" ${layer.fontWeight === 'normal' ? 'selected' : ''}>Normal</option>
+                            <option value="bold" ${layer.fontWeight === 'bold' ? 'selected' : ''}>Bold</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Color:</label>
+                        <input type="color" id="modalColor" value="${layer.color}" style="width:100%;padding:8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Text Align:</label>
+                        <select id="modalTextAlign" style="width:100%;padding:8px;">
+                            <option value="left" ${layer.textAlign === 'left' ? 'selected' : ''}>Left</option>
+                            <option value="center" ${layer.textAlign === 'center' ? 'selected' : ''}>Center</option>
+                            <option value="right" ${layer.textAlign === 'right' ? 'selected' : ''}>Right</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>X Position:</label>
+                        <input type="number" id="modalX" value="${layer.x}" min="0" max="${bannerCanvas.width}" style="width:100%;padding:8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Y Position:</label>
+                        <input type="number" id="modalY" value="${layer.y}" min="0" max="${bannerCanvas.height}" style="width:100%;padding:8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Shadow Color:</label>
+                        <input type="color" id="modalShadowColor" value="${layer.shadowColor}" style="width:100%;padding:8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Shadow Blur:</label>
+                        <input type="number" id="modalShadowBlur" value="${layer.shadowBlur}" min="0" max="50" style="width:100%;padding:8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Shadow Offset X:</label>
+                        <input type="number" id="modalShadowOffsetX" value="${layer.shadowOffsetX}" min="-50" max="50" style="width:100%;padding:8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Shadow Offset Y:</label>
+                        <input type="number" id="modalShadowOffsetY" value="${layer.shadowOffsetY}" min="-50" max="50" style="width:100%;padding:8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Outline Color:</label>
+                        <input type="color" id="modalOutlineColor" value="${layer.outlineColor}" style="width:100%;padding:8px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Outline Width:</label>
+                        <input type="number" id="modalOutlineWidth" value="${layer.outlineWidth}" min="0" max="10" style="width:100%;padding:8px;">
+                    </div>
+                    <div style="text-align:right;">
+                        <button class="btn" id="modalSave">Save</button>
+                        <button class="btn btn-secondary" id="modalCancel" style="margin-left:10px;">Cancel</button>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+
+                document.getElementById('modalSave').addEventListener('click', () => {
+                    layer.text = document.getElementById('modalText').value;
+                    layer.fontFamily = document.getElementById('modalFontFamily').value;
+                    layer.fontSize = Math.min(100, Math.max(10, parseInt(document.getElementById('modalFontSize').value)));
+                    layer.scale = Math.min(2, Math.max(0.5, parseFloat(document.getElementById('modalScale').value)));
+                    layer.fontWeight = document.getElementById('modalFontWeight').value;
+                    layer.color = document.getElementById('modalColor').value;
+                    layer.textAlign = document.getElementById('modalTextAlign').value;
+                    layer.x = Math.min(bannerCanvas.width, Math.max(0, parseInt(document.getElementById('modalX').value)));
+                    layer.y = Math.min(bannerCanvas.height, Math.max(0, parseInt(document.getElementById('modalY').value)));
+                    layer.shadowColor = document.getElementById('modalShadowColor').value;
+                    layer.shadowBlur = Math.min(50, Math.max(0, parseInt(document.getElementById('modalShadowBlur').value)));
+                    layer.shadowOffsetX = Math.min(50, Math.max(-50, parseInt(document.getElementById('modalShadowOffsetX').value)));
+                    layer.shadowOffsetY = Math.min(50, Math.max(-50, parseInt(document.getElementById('modalShadowOffsetY').value)));
+                    layer.outlineColor = document.getElementById('modalOutlineColor').value;
+                    layer.outlineWidth = Math.min(10, Math.max(0, parseInt(document.getElementById('modalOutlineWidth').value)));
+
+                    renderTextLayersList();
+                    drawBanner();
+                    document.body.removeChild(modal);
+                });
+
+                document.getElementById('modalCancel').addEventListener('click', () => {
+                    document.body.removeChild(modal);
+                });
+            }
+
+            // Check if point is within text bounds
+            function isPointInText(x, y, layer) {
+                ctx.font = `${layer.fontWeight} ${layer.fontSize * layer.scale}px ${layer.fontFamily}`;
+                ctx.textAlign = layer.textAlign;
+                ctx.textBaseline = 'alphabetic';
+
+                const textMetrics = ctx.measureText(layer.text);
+                let textWidth = textMetrics.width;
+                let textHeight = layer.fontSize * layer.scale;
+
+                let textX = layer.x;
+                if (layer.textAlign === 'center') {
+                    textX -= textWidth / 2;
+                } else if (layer.textAlign === 'right') {
+                    textX -= textWidth;
+                }
+
+                const textY = layer.y - textHeight;
+
+                return x >= textX && x <= textX + textWidth && y >= textY && y <= textY + textHeight;
+            }
+
+            // Check if point is within image circle
+            function isPointInImage(x, y) {
+                if (!uploadedImage) return false;
+                const centerX = currentImageX + currentCircleSize / 2;
+                const centerY = currentImageY + currentCircleSize / 2;
+                const radius = currentCircleSize / 2;
+                const dx = x - centerX;
+                const dy = y - centerY;
+                return dx * dx + dy * dy <= radius * radius;
+            }
+
+            // Start dragging
+            function startDrag(e) {
+                const rect = bannerCanvas.getBoundingClientRect();
+                const canvasX = (e.clientX - rect.left) / currentZoom;
+                const canvasY = (e.clientY - rect.top) / currentZoom;
+
+                draggingTextLayer = null;
+                isDragging = false;
+
+                for (let i = textLayers.length - 1; i >= 0; i--) {
+                    const layer = textLayers[i];
+                    if (layer.visible && isPointInText(canvasX, canvasY, layer)) {
+                        draggingTextLayer = layer;
+                        activeTextLayerId = layer.id;
+                        renderTextLayersList();
+                        break;
+                    }
+                }
+
+                if (!draggingTextLayer && isPointInImage(canvasX, canvasY)) {
+                    isDragging = true;
+                }
+
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                bannerCanvas.style.cursor = draggingTextLayer || isDragging ? 'grabbing' : 'move';
+            }
+
+            // Drag content
+            function drag(e) {
+                if (!isDragging && !draggingTextLayer) return;
+
+                const rect = bannerCanvas.getBoundingClientRect();
+                const deltaX = (e.clientX - dragStartX) / currentZoom;
+                const deltaY = (e.clientY - dragStartY) / currentZoom;
+
+                if (draggingTextLayer) {
+                    // Calculate new position
+                    let newX = draggingTextLayer.x + deltaX;
+                    let newY = draggingTextLayer.y + deltaY;
+
+                    // Get text dimensions
+                    ctx.font = `${draggingTextLayer.fontWeight} ${draggingTextLayer.fontSize * draggingTextLayer.scale}px ${draggingTextLayer.fontFamily}`;
+                    ctx.textAlign = draggingTextLayer.textAlign;
+                    const textMetrics = ctx.measureText(draggingTextLayer.text);
+                    const textWidth = textMetrics.width;
+                    const textHeight = draggingTextLayer.fontSize * draggingTextLayer.scale;
+
+                    // Adjust for text alignment
+                    let textX = newX;
+                    if (draggingTextLayer.textAlign === 'center') {
+                        textX -= textWidth / 2;
+                    } else if (draggingTextLayer.textAlign === 'right') {
+                        textX -= textWidth;
+                    }
+
+                    // Constrain within canvas
+                    newX = Math.min(
+                        bannerCanvas.width - (draggingTextLayer.textAlign === 'left' ? 0 : textWidth / 2),
+                        Math.max(
+                            (draggingTextLayer.textAlign === 'right' ? textWidth : draggingTextLayer.textAlign === 'center' ? textWidth / 2 : 0),
+                            newX
+                        )
+                    );
+                    newY = Math.min(
+                        bannerCanvas.height,
+                        Math.max(textHeight, newY)
+                    );
+
+                    draggingTextLayer.x = newX;
+                    draggingTextLayer.y = newY;
+                } else if (isDragging) {
+                    // Calculate new image position
+                    let newImageX = currentImageX + deltaX;
+                    let newImageY = currentImageY + deltaY;
+
+                    // Constrain image within canvas
+                    newImageX = Math.min(
+                        bannerCanvas.width - currentCircleSize,
+                        Math.max(0, newImageX)
+                    );
+                    newImageY = Math.min(
+                        bannerCanvas.height - currentCircleSize,
+                        Math.max(0, newImageY)
+                    );
+
+                    currentImageX = newImageX;
+                    currentImageY = newImageY;
+                    imagePosXInput.value = Math.round(currentImageX);
+                    imagePosYInput.value = Math.round(currentImageY);
+                }
+
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                drawBanner();
+            }
+
+            // End dragging
+            function endDrag() {
+                isDragging = false;
+                draggingTextLayer = null;
+                bannerCanvas.style.cursor = 'move';
+            }
+
+            // Update circle size
+            function updateCircleSize(e) {
+                currentCircleSize = parseInt(e.target.value);
+                // Ensure image stays within bounds after resizing
+                currentImageX = Math.min(
+                    bannerCanvas.width - currentCircleSize,
+                    Math.max(0, currentImageX)
+                );
+                currentImageY = Math.min(
+                    bannerCanvas.height - currentCircleSize,
+                    Math.max(0, currentImageY)
+                );
+                imagePosXInput.value = Math.round(currentImageX);
+                imagePosYInput.value = Math.round(currentImageY);
+                drawBanner();
+            }
+
+            // Update image position
+            function updateImagePosition() {
+                let newX = parseInt(imagePosXInput.value);
+                let newY = parseInt(imagePosYInput.value);
+
+                // Constrain within canvas
+                newX = Math.min(
+                    bannerCanvas.width - currentCircleSize,
+                    Math.max(0, newX)
+                );
+                newY = Math.min(
+                    bannerCanvas.height - currentCircleSize,
+                    Math.max(0, newY)
+                );
+
+                currentImageX = newX;
+                currentImageY = newY;
+                imagePosXInput.value = Math.round(currentImageX);
+                imagePosYInput.value = Math.round(currentImageY);
+                drawBanner();
+            }
+
+            // Center image X
+            function centerImageX() {
+                currentImageX = (bannerCanvas.width - currentCircleSize) / 2;
+                imagePosXInput.value = Math.round(currentImageX);
+                drawBanner();
+            }
+
+            // Center image Y
+            function centerImageY() {
+                currentImageY = (bannerCanvas.height - currentCircleSize) / 2;
+                imagePosYInput.value = Math.round(currentImageY);
+                drawBanner();
+            }
+
+            // Update rotation
+            function updateRotation(e) {
+                currentRotation = parseInt(e.target.value);
+                drawBanner();
+            }
+
+            // Update image zoom
+            function updateImageZoom(e) {
+                imageZoom = Math.min(2, Math.max(0.5, parseFloat(e.target.value)));
+                imageZoomInput.value = imageZoom;
+                drawBanner();
+            }
+
+            // Update brightness filter
+            function updateBrightness(e) {
+                filters.brightness = parseInt(e.target.value);
+                brightnessValue.textContent = `${filters.brightness}%`;
+                drawBanner();
+            }
+
+            // Update contrast filter
+            function updateContrast(e) {
+                filters.contrast = parseInt(e.target.value);
+                contrastValue.textContent = `${filters.contrast}%`;
+                drawBanner();
+            }
+
+            // Update saturation filter
+            function updateSaturation(e) {
+                filters.saturation = parseInt(e.target.value);
+                saturationValue.textContent = `${filters.saturation}%`;
+                drawBanner();
+            }
+
+            // Update blur filter
+            function updateBlur(e) {
+                filters.blur = parseInt(e.target.value);
+                blurValue.textContent = `${filters.blur}px`;
+                drawBanner();
+            }
+
+            // Reset all filters
+            function resetAllFilters() {
+                filters = { brightness: 100, contrast: 100, saturation: 100, blur: 0 };
+                brightnessFilter.value = 100;
+                contrastFilter.value = 100;
+                saturationFilter.value = 100;
+                blurFilter.value = 0;
+                brightnessValue.textContent = '100%';
+                contrastValue.textContent = '100%';
+                saturationValue.textContent = '100%';
+                blurValue.textContent = '0px';
+                drawBanner();
+            }
+
+            // Update circle style
+            function updateCircleStyle() {
+                circleStyle.borderColor = circleBorderColorInput.value;
+                circleStyle.borderWidth = parseInt(circleBorderWidthInput.value);
+                circleStyle.shadowColor = circleShadowColorInput.value;
+                circleStyle.shadowBlur = parseInt(circleShadowBlurInput.value);
+                drawBanner();
+            }
+
+            // Update background color
+            function updateBackground(e) {
+                currentBackgroundColor = e.target.value;
+                drawBanner();
+            }
+
+            // Update background pattern
+            function updateBackgroundPattern() {
+                bgPattern.type = bgPatternSelect.value;
+                bgPattern.color = bgPatternColorInput.value;
+                drawBanner();
+            }
+
+            // Switch tabs in image settings
+            function switchTab(e) {
+                const tabId = e.target.dataset.tab;
+                tabs.forEach(tab => tab.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                e.target.classList.add('active');
+                document.getElementById(tabId + '-tab').classList.add('active');
+            }
+
+            // Adjust zoom
+            function adjustZoom(amount) {
+                currentZoom = Math.max(0.1, currentZoom + amount);
+                bannerCanvas.style.transform = `scale(${currentZoom})`;
+            }
+
+            // Reset zoom
+            function resetZoom() {
+                currentZoom = 1;
+                bannerCanvas.style.transform = 'scale(1)';
+            }
+
+            // Clear the canvas
+            function clearCanvas() {
+                uploadedImage = null;
+                textLayers = [];
+                activeTextLayerId = null;
+                filters = { brightness: 100, contrast: 100, saturation: 100, blur: 0 };
+                circleStyle = { borderColor: '#ffffff', borderWidth: 0, shadowColor: '#000000', shadowBlur: 0 };
+                bgPattern = { type: 'none', color: '#ffffff' };
+                currentBackgroundColor = '#000000';
+                currentImageX = 50;
+                currentImageY = 50;
+                currentCircleSize = 200;
+                currentRotation = 0;
+                imageZoom = 1;
+
+                circleSizeInput.value = 200;
+                imagePosXInput.value = 50;
+                imagePosYInput.value = 50;
+                imageRotationInput.value = 0;
+                imageZoomInput.value = 1;
+                brightnessFilter.value = 100;
+                contrastFilter.value = 100;
+                saturationFilter.value = 100;
+                blurFilter.value = 0;
+                brightnessValue.textContent = '100%';
+                contrastValue.textContent = '100%';
+                saturationValue.textContent = '100%';
+                blurValue.textContent = '0px';
+                circleBorderColorInput.value = '#ffffff';
+                circleBorderWidthInput.value = 0;
+                circleShadowColorInput.value = '#000000';
+                circleShadowBlurInput.value = 0;
+                backgroundColorInput.value = '#000000';
+                bgPatternSelect.value = 'none';
+                bgPatternColorInput.value = '#ffffff';
+
+                renderTextLayersList();
+                drawBanner();
+            }
+
+            // Download the banner
+            function downloadBanner() {
+                const dataURL = bannerCanvas.toDataURL('image/png');
+                const a = document.createElement('a');
+                a.href = dataURL;
+                a.download = 'gork_banner.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+
+            // Utility function to convert hex to RGB
+            function hexToRgb(hex) {
+                const bigint = parseInt(hex.slice(1), 16);
+                const r = (bigint >> 16) & 255;
+                const g = (bigint >> 8) & 255;
+                const b = bigint & 255;
+                return `${r},${g},${b}`;
+            }
+
+            // Initialize the application
+            init();
+        });
+    </script>
+</body>
+</html>
