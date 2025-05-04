@@ -1183,127 +1183,107 @@
             }
 
             // Start dragging
-           // Ellenőrzi, hogy a kurzor egy szövegrétegen van-e
-function isPointInText(x, y, layer) {
-    ctx.font = `${layer.fontWeight} ${layer.fontSize * layer.scale}px ${layer.fontFamily}`;
-    const textMetrics = ctx.measureText(layer.text);
-    const textWidth = textMetrics.width;
-    const textHeight = layer.fontSize * layer.scale;
+            function startDrag(e) {
+                const rect = bannerCanvas.getBoundingClientRect();
+                const canvasX = (e.clientX - rect.left) / currentZoom;
+                const canvasY = (e.clientY - rect.top) / currentZoom;
 
-    let textX = layer.x;
-    if (layer.textAlign === 'center') {
-        textX -= textWidth / 2;
-    } else if (layer.textAlign === 'right') {
-        textX -= textWidth;
-    }
+                draggingTextLayer = null;
+                isDragging = false;
 
-    const textY = layer.y - textHeight;
+                for (let i = textLayers.length - 1; i >= 0; i--) {
+                    const layer = textLayers[i];
+                    if (layer.visible && isPointInText(canvasX, canvasY, layer)) {
+                        draggingTextLayer = layer;
+                        activeTextLayerId = layer.id;
+                        renderTextLayersList();
+                        break;
+                    }
+                }
 
-    return (
-        x >= textX &&
-        x <= textX + textWidth &&
-        y >= textY &&
-        y <= textY + textHeight * 1.2 // kis ráhagyás a kényelmesebb kattintáshoz
-    );
-}
+                if (!draggingTextLayer && isPointInImage(canvasX, canvasY)) {
+                    isDragging = true;
+                }
 
-// Ellenőrzi, hogy a kurzor a képen van-e
-function isPointInImage(x, y) {
-    return (
-        x >= currentImageX &&
-        x <= currentImageX + currentCircleSize &&
-        y >= currentImageY &&
-        y <= currentImageY + currentCircleSize
-    );
-}
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                bannerCanvas.style.cursor = draggingTextLayer || isDragging ? 'grabbing' : 'move';
+            }
 
-// Start dragging
-function startDrag(e) {
-    const rect = bannerCanvas.getBoundingClientRect();
-    const canvasX = (e.clientX - rect.left) / currentZoom;
-    const canvasY = (e.clientY - rect.top) / currentZoom;
+            // Drag content
+            function drag(e) {
+                if (!isDragging && !draggingTextLayer) return;
 
-    draggingTextLayer = null;
-    isDragging = false;
+                const rect = bannerCanvas.getBoundingClientRect();
+                const deltaX = (e.clientX - dragStartX) / currentZoom;
+                const deltaY = (e.clientY - dragStartY) / currentZoom;
 
-    for (let i = textLayers.length - 1; i >= 0; i--) {
-        const layer = textLayers[i];
-        if (layer.visible && isPointInText(canvasX, canvasY, layer)) {
-            draggingTextLayer = layer;
-            activeTextLayerId = layer.id;
-            renderTextLayersList();
-            break;
-        }
-    }
+                if (draggingTextLayer) {
+                    // Calculate new position
+                    let newX = draggingTextLayer.x + deltaX;
+                    let newY = draggingTextLayer.y + deltaY;
 
-    if (!draggingTextLayer && isPointInImage(canvasX, canvasY)) {
-        isDragging = true;
-    }
+                    // Get text dimensions
+                    ctx.font = `${draggingTextLayer.fontWeight} ${draggingTextLayer.fontSize * draggingTextLayer.scale}px ${draggingTextLayer.fontFamily}`;
+                    ctx.textAlign = draggingTextLayer.textAlign;
+                    const textMetrics = ctx.measureText(draggingTextLayer.text);
+                    const textWidth = textMetrics.width;
+                    const textHeight = draggingTextLayer.fontSize * draggingTextLayer.scale;
 
-    dragStartX = e.clientX;
-    dragStartY = e.clientY;
-    bannerCanvas.style.cursor = draggingTextLayer || isDragging ? 'grabbing' : 'move';
-}
+                    // Adjust for text alignment
+                    let textX = newX;
+                    if (draggingTextLayer.textAlign === 'center') {
+                        textX -= textWidth / 2;
+                    } else if (draggingTextLayer.textAlign === 'right') {
+                        textX -= textWidth;
+                    }
 
-// Drag content
-function drag(e) {
-    if (!isDragging && !draggingTextLayer) return;
+                    // Constrain within canvas
+                    newX = Math.min(
+                        bannerCanvas.width - (draggingTextLayer.textAlign === 'left' ? 0 : textWidth / 2),
+                        Math.max(
+                            (draggingTextLayer.textAlign === 'right' ? textWidth : draggingTextLayer.textAlign === 'center' ? textWidth / 2 : 0),
+                            newX
+                        )
+                    );
+                    newY = Math.min(
+                        bannerCanvas.height,
+                        Math.max(textHeight, newY)
+                    );
 
-    const rect = bannerCanvas.getBoundingClientRect();
-    const deltaX = (e.clientX - dragStartX) / currentZoom;
-    const deltaY = (e.clientY - dragStartY) / currentZoom;
+                    draggingTextLayer.x = newX;
+                    draggingTextLayer.y = newY;
+                } else if (isDragging) {
+                    // Calculate new image position
+                    let newImageX = currentImageX + deltaX;
+                    let newImageY = currentImageY + deltaY;
 
-    if (draggingTextLayer) {
-        // Calculate new position
-        let newX = draggingTextLayer.x + deltaX;
-        let newY = draggingTextLayer.y + deltaY;
+                    // Constrain image within canvas
+                    newImageX = Math.min(
+                        bannerCanvas.width - currentCircleSize,
+                        Math.max(0, newImageX)
+                    );
+                    newImageY = Math.min(
+                        bannerCanvas.height - currentCircleSize,
+                        Math.max(0, newImageY)
+                    );
 
-        // Get text dimensions
-        ctx.font = `${draggingTextLayer.fontWeight} ${draggingTextLayer.fontSize * draggingTextLayer.scale}px ${draggingTextLayer.fontFamily}`;
-        ctx.textAlign = draggingTextLayer.textAlign;
-        const textMetrics = ctx.measureText(draggingTextLayer.text);
-        const textWidth = textMetrics.width;
-        const textHeight = draggingTextLayer.fontSize * draggingTextLayer.scale;
+                    currentImageX = newImageX;
+                    currentImageY = newImageY;
+                    imagePosXInput.value = Math.round(currentImageX);
+                    imagePosYInput.value = Math.round(currentImageY);
+                }
 
-        // Adjust for text alignment
-        let textX = newX;
-        if (draggingTextLayer.textAlign === 'center') {
-            textX -= textWidth / 2;
-        } else if (draggingTextLayer.textAlign === 'right') {
-            textX -= textWidth;
-        }
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                drawBanner();
+            }
 
-        // Clamp to canvas bounds
-        if (textX < 0) newX -= textX;
-        if (textX + textWidth > bannerCanvas.width) newX -= (textX + textWidth - bannerCanvas.width);
-        if (newY - textHeight < 0) newY = textHeight;
-        if (newY > bannerCanvas.height) newY = bannerCanvas.height;
-
-        draggingTextLayer.x = newX;
-        draggingTextLayer.y = newY;
-    }
-
-    if (isDragging) {
-        currentImageX += deltaX;
-        currentImageY += deltaY;
-
-        // Clamp image position within canvas
-        currentImageX = Math.max(0, Math.min(bannerCanvas.width - currentCircleSize, currentImageX));
-        currentImageY = Math.max(0, Math.min(bannerCanvas.height - currentCircleSize, currentImageY));
-    }
-
-    dragStartX = e.clientX;
-    dragStartY = e.clientY;
-    drawBanner();
-}
-
-// End dragging
-function endDrag() {
-    isDragging = false;
-    draggingTextLayer = null;
-    bannerCanvas.style.cursor = 'default';
-}
-
+            // End dragging
+            function endDrag() {
+                isDragging = false;
+                draggingTextLayer = null;
+                bannerCanvas.style.cursor = 'move';
             }
 
             // Update circle size
